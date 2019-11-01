@@ -55,7 +55,7 @@ class Shortcode {
 		$this->plugin_slug = $plugin->get_plugin_slug();
 		$this->version = $plugin->get_plugin_version();
 
-		add_shortcode( 'wp-reactivate', array( $this, 'shortcode' ) );
+		add_shortcode( 'wpr-contacts', array( $this, 'shortcode' ) );
 	}
 
 
@@ -85,7 +85,7 @@ class Shortcode {
 		$object_name = 'wpr_object_' . uniqid();
 
 		$object = shortcode_atts( array(
-			'title'       => 'Hello world',
+			'title'       => 'Contacts',
 			'api_nonce'   => wp_create_nonce( 'wp_rest' ),
 			'api_url'	  => rest_url( $this->plugin_slug . '/v1/' ),
 		), $atts, 'wp-reactivate' );

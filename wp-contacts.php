@@ -1,25 +1,19 @@
 <?php
 /**
- * WP-Reactivate
+ * Contacts
  *
  *
- * @package   WP-Reactivate
- * @author    Pangolin
- * @license   GPL-3.0
- * @link      https://gopangolin.com
- * @copyright 2017 Pangolin (Pty) Ltd
+ * 
  *
  * @wordpress-plugin
- * Plugin Name:       WP-Reactivate
- * Plugin URI:        https://gopangolin.com
- * Description:       React boilerplate for WordPress plugins
+ * Plugin Name:       WP Contacts
+ * Plugin URI:        https://
+ * Description:       wp Contacts Details
  * Version:           1.0.2
- * Author:            pangolin
- * Author URI:        https://gopangolin.com
- * Text Domain:       wp-reactivate
+ * Author:            Steve Rempelos
+ * 
  * License:           GPL-3.0
- * License URI:       https://www.gnu.org/licenses/gpl-3.0.txt
- * Domain Path:       /languages
+ * 
  */
 
 
@@ -79,7 +73,8 @@ function init() {
 	$wpr = Plugin::get_instance();
 	$wpr_shortcode = Shortcode::get_instance();
 	$wpr_admin = Admin::get_instance();
-	$wpr_rest = Endpoint\Example::get_instance();
+    $wpr_rest_admin = Endpoint\Admin::get_instance();
+    $wpr_rest_collection = Endpoint\Wp_contacts::get_instance(); // connect our new endpoint
 }
 add_action( 'plugins_loaded', 'Pangolin\\WPR\\init' );
 

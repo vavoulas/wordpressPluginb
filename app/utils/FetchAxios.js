@@ -1,6 +1,6 @@
 /* eslint-disable no-undef */
-import fetch from 'isomorphic-fetch';
-
+/* eslint-disable no-console */
+import axios from 'axios';
 
 const methods = [
     'get',
@@ -9,7 +9,7 @@ const methods = [
     'delete',
 ];
 
-export default class fetchWP {
+export default class fetchAxios {
     constructor(options = {}) {
         this.options = options;
 
@@ -43,12 +43,13 @@ export default class fetchWP {
 
 
 
-            return fetch(this.options.restURL + endpoint, fetchObject)
+            return axios(this.options.restURL + endpoint, fetchObject)
                 .then(response => {
                     return response.json().then(json => {
                         return response.ok ? json : Promise.reject(json);
                     });
                 });
+
         }
     }
 }

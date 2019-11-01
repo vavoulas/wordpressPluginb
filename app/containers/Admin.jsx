@@ -1,15 +1,21 @@
+/* eslint-disable no-undef */
+/* eslint-disable no-console */
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 
 import fetchWP from '../utils/fetchWP';
+import Notice from '../components/notice';
+ 
+
 
 export default class Admin extends Component {
   constructor(props) {
     super(props);
 
     this.state = {
-      exampleSetting: '',
-      savedExampleSetting: ''
+      email: '',
+      savedEmail: '',
+      notice: false,
     };
 
     this.fetchWP = new fetchWP({
@@ -19,28 +25,33 @@ export default class Admin extends Component {
 
     this.getSetting();
   }
-
+  
   getSetting = () => {
-    this.fetchWP.get( 'example' )
+    this.fetchWP.get( 'admin' )
     .then(
       (json) => this.setState({
-        exampleSetting: json.value,
-        savedExampleSetting: json.value
+        email: json.value,
+        savedEmail: json.value
       }),
       (err) => console.log( 'error', err )
     );
   };
 
   updateSetting = () => {
-    this.fetchWP.post( 'example', { exampleSetting: this.state.exampleSetting } )
+    this.fetchWP.post( 'admin', {email: this.state.email} )
     .then(
       (json) => this.processOkResponse(json, 'saved'),
-      (err) => console.log('error', err)
+      (err) => this.setState({
+        notice: {
+          type: 'error',
+          message: err.message, // The error message returned by the REST API
+        }
+      })
     );
   }
 
   deleteSetting = () => {
-    this.fetchWP.delete( 'example' )
+    this.fetchWP.delete( 'admin' )
     .then(
       (json) => this.processOkResponse(json, 'deleted'),
       (err) => console.log('error', err)
@@ -50,24 +61,38 @@ export default class Admin extends Component {
   processOkResponse = (json, action) => {
     if (json.success) {
       this.setState({
-        exampleSetting: json.value,
-        savedExampleSetting: json.value,
+        email: json.value,
+        savedEmail: json.value,
+        notice: {
+          type: 'success',
+          message: `Setting ${action} successfully.`,
+        }
       });
     } else {
-      console.log(`Setting was not ${action}.`, json);
+      this.setState({
+        notice: {
+          type: 'error',
+          message: `Setting was not ${method}.`,
+        }
+      });
     }
   }
 
   updateInput = (event) => {
     this.setState({
-      exampleSetting: event.target.value,
+      email: event.target.value,
     });
   }
 
   handleSave = (event) => {
     event.preventDefault();
-    if ( this.state.exampleSetting === this.state.savedExampleSetting ) {
-      console.log('Setting unchanged');
+    if ( this.state.email === this.state.savedEmail ) {
+      this.setState({
+        notice: {
+          type: 'warning',
+          message: 'Setting unchanged.',
+        }
+      })
     } else {
       this.updateSetting();
     }
@@ -77,18 +102,30 @@ export default class Admin extends Component {
     event.preventDefault();
     this.deleteSetting();
   }
+  clearNotice = () => {
+    this.setState({
+      notice: false,
+    });
+  }
+
 
   render() {
+    let notice;
+
+    if ( this.state.notice ) {
+      notice = <Notice notice={this.state.notice} onDismissClick={this.clearNotice} />
+    }
     return (
       <div className="wrap">
+         {notice}
         <form>
-          <h1>WP Reactivate Settings</h1>
-          
+          <h1>Contact Form Settings</h1>
+
           <label>
-          Example Setting:
+          Notification Email:
             <input
-              type="text"
-              value={this.state.exampleSetting}
+              type="email"
+              value={this.state.email}
               onChange={this.updateInput}
             />
           </label>
